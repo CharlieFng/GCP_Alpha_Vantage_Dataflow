@@ -152,8 +152,10 @@ public class PubSubToBigQuery {
                     .withWriteDisposition(BigQueryIO.Write.WriteDisposition.WRITE_APPEND)
                     .withMethod(STREAMING_INSERTS));
 
+        //Execute the pipeline and wait until it finishes running. (for local testing)
+//        pipeline.run().waitUntilFinish();
 
-        // Execute the pipeline and wait until it finishes running.
-        pipeline.run().waitUntilFinish();
+        //When staging job into gcs, need use this
+        pipeline.run();
     }
 }
