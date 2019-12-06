@@ -30,9 +30,9 @@ mvn compile exec:java \
 --runner=DataflowRunner"
 
 ## Trigger job
-gcloud dataflow jobs run stock-streaming \
+gcloud dataflow jobs run stock-streaming-demo \
 --gcs-location=gs://charlie-feng-contino-dataflow/template \
---zone=australia-southeast1-a \
+--region=asia-east1 \
 --parameters \
 "inputTopic=projects/charlie-feng-contino/topics/stock-realtime,\
 tableSpec=charlie-feng-contino:samples.alpha_stock,\
