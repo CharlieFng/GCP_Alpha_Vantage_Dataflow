@@ -29,16 +29,16 @@ public class Alphaavantage4jTest {
 
     @Test
     public void testTimeSeriesIntraday() {
-        int timeout = 3000;
+        int timeout = 30000;
         AlphaVantageConnector apiConnector = new AlphaVantageConnector(apiKey, timeout);
         TimeSeries stockTimeSeries = new TimeSeries(apiConnector);
 
         try {
-//            IntraDay response = stockTimeSeries.intraDay("MSFT", ONE_MIN, OutputSize.FULL);
-            org.patriques.output.timeseries.IntraDay response = stockTimeSeries.intraDay("MSFT", ONE_MIN);
+            org.patriques.output.timeseries.IntraDay response = stockTimeSeries.intraDay("MSFT", ONE_MIN, OutputSize.FULL);
             Map<String, String> metaData = response.getMetaData();
             System.out.println("Information: " + metaData.get("1. Information"));
             System.out.println("Stock: " + metaData.get("2. Symbol"));
+            System.out.println("Timezone: " + metaData.get("6. Time Zone"));
 
             List<StockData> stockData = response.getStockData();
             stockData.forEach(stock -> {
@@ -49,6 +49,7 @@ public class Alphaavantage4jTest {
                 System.out.println("close:  " + stock.getClose());
                 System.out.println("volume: " + stock.getVolume());
             });
+            System.out.println("Total number of records: " + stockData.size());
         } catch (AlphaVantageException e) {
             System.out.println("something went wrong");
         }
@@ -56,7 +57,7 @@ public class Alphaavantage4jTest {
 
     @Test
     public void testTimeSeriesDaily() {
-        int timeout = 3000;
+        int timeout = 30000;
         AlphaVantageConnector apiConnector = new AlphaVantageConnector(apiKey, timeout);
         TimeSeries stockTimeSeries = new TimeSeries(apiConnector);
 
@@ -83,7 +84,7 @@ public class Alphaavantage4jTest {
 
     @Test
     public void testForeignExchange() {
-        int timeout = 3000;
+        int timeout = 30000;
         AlphaVantageConnector apiConnector = new AlphaVantageConnector(apiKey, timeout);
         ForeignExchange foreignExchange = new ForeignExchange(apiConnector);
 
@@ -98,13 +99,13 @@ public class Alphaavantage4jTest {
             System.out.println("exchange rate:      " + currencyExchangeData.getExchangeRate());
             System.out.println("last refresh:       " + currencyExchangeData.getTime());
         } catch (AlphaVantageException e) {
-            System.out.println("something went wrong");
+            System.out.println("something went wrong"+  e);
         }
     }
 
     @Test
     public void testCryptoCurrencies() {
-        int timeout = 3000;
+        int timeout = 30000;
         AlphaVantageConnector apiConnector = new AlphaVantageConnector(apiKey, timeout);
         DigitalCurrencies digitalCurrencies = new DigitalCurrencies(apiConnector);
 
@@ -129,7 +130,7 @@ public class Alphaavantage4jTest {
 
     @Test
     public void testTechnicalIndicators() {
-        int timeout = 3000;
+        int timeout = 30000;
         AlphaVantageConnector apiConnector = new AlphaVantageConnector(apiKey, timeout);
         TechnicalIndicators technicalIndicators = new TechnicalIndicators(apiConnector);
 
@@ -153,7 +154,7 @@ public class Alphaavantage4jTest {
 
     @Test
     public void testSectorPerformances() {
-        int timeout = 3000;
+        int timeout = 30000;
         AlphaVantageConnector apiConnector = new AlphaVantageConnector(apiKey, timeout);
         SectorPerformances sectorPerformances = new SectorPerformances(apiConnector);
 

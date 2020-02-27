@@ -187,11 +187,6 @@
       <version>${slf4j.version}</version>
     </dependency>
 
-    <!-- Apache Beam
-      To run on another of the Beam runners, add its module to this pom.xml
-      according to the runner-specific setup instructions on the Beam website:
-        http://beam.apache.org/documentation/#runners
-    -->
     <dependency>
       <groupId>org.apache.beam</groupId>
       <artifactId>beam-sdks-java-core</artifactId>

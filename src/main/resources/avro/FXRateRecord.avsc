@@ -1,7 +1,7 @@
 {
   "namespace": "club.charliefeng.rate",
   "type": "record",
-  "name": "RateRecord",
+  "name": "FXRateRecord",
   "version": "1",
   "fields": [
     {   "name": "metadata",

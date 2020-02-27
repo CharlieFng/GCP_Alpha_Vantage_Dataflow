@@ -39,3 +39,19 @@ tableSpec=charlie-feng-contino:samples.alpha_stock,\
 windowSize=2"
 
 
+# New Stock daily archive
+mvn compile exec:java -Dexec.mainClass=club.charliefeng.dataflow.batch.DaillySubscriber4Stock \
+-Dexec.cleanupDaemonThreads=false \
+-Dexec.args=" \
+--symbol=MSFT \
+--output=gs://charlie-feng-contino-dataflow \
+--runner=DirectRunner"
+
+
+# New Stock intraday archive
+mvn compile exec:java -Dexec.mainClass=club.charliefeng.dataflow.batch.IntradaySubscriber4Stock \
+-Dexec.cleanupDaemonThreads=false \
+-Dexec.args=" \
+--symbol=MSFT \
+--outputTopic=projects/charlie-feng-contino/topics/stock-intraday \
+--runner=DirectRunner"
