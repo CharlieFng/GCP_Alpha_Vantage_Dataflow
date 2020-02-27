@@ -23,6 +23,7 @@ import org.patriques.output.timeseries.IntraDay;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.time.*;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -82,6 +83,7 @@ public class IntradaySubscriber4Stock {
 
         pipeline
                 .apply("Fetch Stock Records", Create.of(records)).setCoder(new StockRecordCoder())
+                .apply("Filter Current Day Only", ParDo.of(new FilterCurrentDay()))
                 .apply("Map Pojo to Avro", ParDo.of(new PojoToAvroFn()))
                 .apply("Publish to Pubsub", PubsubIO.writeAvros(club.charliefeng.stock.StockRecord.class)
                                                           .to(options.getOutputTopic()));
@@ -100,6 +102,22 @@ public class IntradaySubscriber4Stock {
             club.charliefeng.stock.StockRecord avroRecord = StockMapper.mapIntraday(pojo);
             System.out.println(avroRecord);
             out.output(avroRecord);
+        }
+    }
+
+    static class FilterCurrentDay extends DoFn<StockRecord, StockRecord> {
+        @ProcessElement
+        public void processElement(@Element StockRecord in, OutputReceiver<StockRecord> out) {
+            ZonedDateTime zonedDateTime = ZonedDateTime.now(ZoneId.of("US/Eastern"));
+            LocalDateTime localTime = zonedDateTime.toLocalDateTime();
+            LocalDate localDate = zonedDateTime.toLocalDate();
+
+            LocalDateTime recordTime = in.getDateTime();
+            if(recordTime.toLocalDate().compareTo(localDate)==0) {
+                out.output(in);
+                LOG.info("Current US/Eastern local time is: {}, record date time is{}", localTime, recordTime);
+                LOG.info("Record in local date {} has been added", localDate);
+            }
         }
     }
 }
