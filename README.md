@@ -39,7 +39,7 @@ tableSpec=charlie-feng-contino:samples.alpha_stock,\
 windowSize=2"
 
 
-# New Stock daily archive
+# New Stock daily archive batch collector
 mvn compile exec:java -Dexec.mainClass=club.charliefeng.dataflow.batch.DaillySubscriber4Stock \
 -Dexec.cleanupDaemonThreads=false \
 -Dexec.args=" \
@@ -48,10 +48,24 @@ mvn compile exec:java -Dexec.mainClass=club.charliefeng.dataflow.batch.DaillySub
 --runner=DirectRunner"
 
 
-# New Stock intraday archive
+# New Stock intraday batch collector 
 mvn compile exec:java -Dexec.mainClass=club.charliefeng.dataflow.batch.IntradaySubscriber4Stock \
 -Dexec.cleanupDaemonThreads=false \
 -Dexec.args=" \
 --symbol=MSFT \
 --outputTopic=projects/charlie-feng-contino/topics/stock-intraday \
 --runner=DirectRunner"
+
+
+# New Stock intraday streaming loader 
+mvn compile exec:java \
+-Dexec.mainClass=club.charliefeng.dataflow.streaming.IntradayStream4Stock \
+-Dexec.cleanupDaemonThreads=false \
+-Dexec.args=" \
+--projectId=$PROJECT_NAME \
+--inputTopic=projects/charlie-feng-contino/topics/stock-intraday \
+--bqTableSpec=stock.intraday \
+--btInstanceId=stock-intraday \
+--btTableId=stock-intraday \
+--runner=DirectRunner \
+--windowSize=2"

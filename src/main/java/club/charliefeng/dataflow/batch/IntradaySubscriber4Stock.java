@@ -113,7 +113,8 @@ public class IntradaySubscriber4Stock {
             LocalDate localDate = zonedDateTime.toLocalDate();
 
             LocalDateTime recordTime = in.getDateTime();
-            if(recordTime.toLocalDate().compareTo(localDate)==0) {
+            // Production should set compare == 0, only filter current day data
+            if(recordTime.toLocalDate().compareTo(localDate)<=0) {
                 out.output(in);
                 LOG.info("Current US/Eastern local time is: {}, record date time is{}", localTime, recordTime);
                 LOG.info("Record in local date {} has been added", localDate);
