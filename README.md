@@ -44,7 +44,16 @@ mvn compile exec:java -Dexec.mainClass=club.charliefeng.dataflow.batch.DaillySub
 -Dexec.cleanupDaemonThreads=false \
 -Dexec.args=" \
 --symbol=MSFT \
---output=gs://charlie-feng-contino-dataflow \
+--output=gs://charlie-feng-contino-dataflow/stock-archive \
+--runner=DirectRunner"
+
+# New Stock daily archive batch loader 
+mvn compile exec:java -Dexec.mainClass=club.charliefeng.dataflow.batch.DailyLoader4Stock \
+-Dexec.cleanupDaemonThreads=false \
+-Dexec.args=" \
+--symbol=MSFT \
+--input=gs://charlie-feng-contino-dataflow/stock-archive \
+--output=gs://charlie-feng-contino-dataflow/stock-archive \
 --runner=DirectRunner"
 
 
@@ -55,7 +64,6 @@ mvn compile exec:java -Dexec.mainClass=club.charliefeng.dataflow.batch.IntradayS
 --symbol=MSFT \
 --outputTopic=projects/charlie-feng-contino/topics/stock-intraday \
 --runner=DirectRunner"
-
 
 # New Stock intraday streaming loader 
 mvn compile exec:java \

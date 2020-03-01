@@ -9,8 +9,6 @@ import org.apache.beam.sdk.options.*;
 import org.apache.beam.sdk.transforms.Create;
 import org.apache.beam.sdk.transforms.DoFn;
 import org.apache.beam.sdk.transforms.ParDo;
-import org.joda.time.DateTime;
-import org.joda.time.format.DateTimeFormat;
 import org.patriques.AlphaVantageConnector;
 import org.patriques.TimeSeries;
 import org.patriques.input.timeseries.OutputSize;
@@ -19,6 +17,10 @@ import org.patriques.output.timeseries.Daily;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.time.LocalDate;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -59,6 +61,12 @@ public class DaillySubscriber4Stock {
 
     public static void main(String[] args) {
 
+        ZonedDateTime zonedDateTime = ZonedDateTime.now(ZoneId.of("US/Eastern"));
+        LocalDate localDate = zonedDateTime.toLocalDate();
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        String formatLocalDate = localDate.format(formatter);
+        LOG.info("Current date of US/Eastern zone is: {}", formatLocalDate);
+
         PipelineOptionsFactory.register(MyOptions.class);
         MyOptions options = PipelineOptionsFactory
                 .fromArgs(args)
@@ -78,9 +86,9 @@ public class DaillySubscriber4Stock {
                 .apply("Fetch Stock Records", Create.of(records)).setCoder(new StockRecordCoder())
                 .apply("Map Pojo to Avro", ParDo.of(new PojoToAvroFn()))
                 .apply(AvroIO.write(club.charliefeng.stock.StockRecord.class)
-                        .to(String.format("%s/stock-archive/%s/%s-",
+                        .to(String.format("%s/%s/%s-",
                                 options.getOutput(),
-                                DateTimeFormat.forPattern("yyyy-MM-dd").print(new DateTime().minusDays(1)),
+                                formatLocalDate,
                                 options.getSymbol()))
                         .withSuffix(".avro")
                         .withNumShards(1)
