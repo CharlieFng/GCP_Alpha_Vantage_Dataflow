@@ -4,9 +4,7 @@ import club.charliefeng.dataflow.dto.StockRecord;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import org.apache.beam.sdk.coders.Coder;
-import org.apache.beam.sdk.coders.CoderException;
 import org.apache.beam.sdk.util.StreamUtils;
-import org.patriques.output.timeseries.data.StockData;
 
 import java.io.IOException;
 import java.io.InputStream;
