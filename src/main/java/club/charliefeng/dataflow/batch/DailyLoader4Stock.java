@@ -89,9 +89,9 @@ public class DailyLoader4Stock {
                        );
 
         //Execute the pipeline and wait until it finishes running. (for local testing)
-        pipeline.run().waitUntilFinish();
+//        pipeline.run().waitUntilFinish();
 
         //When staging job into gcs, need use this
-//        pipeline.run();
+        pipeline.run();
     }
 }
