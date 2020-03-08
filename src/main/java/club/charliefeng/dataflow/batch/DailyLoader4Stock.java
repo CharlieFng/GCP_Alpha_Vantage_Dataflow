@@ -6,10 +6,7 @@ import org.apache.beam.sdk.Pipeline;
 import org.apache.beam.sdk.io.AvroIO;
 import org.apache.beam.sdk.io.FileIO;
 import org.apache.beam.sdk.io.parquet.ParquetIO;
-import org.apache.beam.sdk.options.Description;
-import org.apache.beam.sdk.options.PipelineOptions;
-import org.apache.beam.sdk.options.PipelineOptionsFactory;
-import org.apache.beam.sdk.options.Validation;
+import org.apache.beam.sdk.options.*;
 import org.apache.parquet.hadoop.metadata.CompressionCodecName;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -29,22 +26,16 @@ public class DailyLoader4Stock {
 
     public interface MyOptions extends PipelineOptions {
 
-        @Description("The symbol of stock")
-        @Validation.Required
-        String getSymbol();
-        void setSymbol(String value);
-
-
         @Description("The input file of pipeline")
         @Validation.Required
-        String getInput();
-        void setInput(String value);
+        ValueProvider<String> getInput();
+        void setInput(ValueProvider<String> value);
 
 
         @Description("The output path of pipeline")
         @Validation.Required
-        String getOutput();
-        void setOutput(String value);
+        ValueProvider<String> getOutput();
+        void setOutput(ValueProvider<String> value);
     }
 
     public static void main(String[] args) throws IOException {
@@ -72,19 +63,23 @@ public class DailyLoader4Stock {
         pipeline
                 .apply("Read Avro from GCS",
                         AvroIO.readGenericRecords(schema).from(
-                            String.format("%s/%s/%s-*.avro",
-                                options.getInput(),
-                                formatLocalDate,
-                                options.getSymbol()
-                            ))
+//                            String.format("%s/%s/%s-*.avro",
+//                                options.getInput(),
+//                                formatLocalDate,
+//                                options.getSymbol())
+                                options.getInput()
+                            )
                         )
                 .apply("Write Parquet to GCS",
                         FileIO.<GenericRecord>write()
                             .via(ParquetIO.sink(schema)
                                 .withCompressionCodec(CompressionCodecName.SNAPPY))
-                            .to(String.format("%s/%s/parquet/",
-                                    options.getOutput(),
-                                    formatLocalDate))
+                            .to(
+//                                String.format("%s/%s/parquet/",
+//                                    options.getOutput(),
+//                                    formatLocalDate)
+                                options.getOutput()
+                            )
                             .withSuffix(".parquet")
                        );
 

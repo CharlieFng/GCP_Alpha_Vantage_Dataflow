@@ -1,5 +1,6 @@
 package club.charliefeng.dataflow.util;
 import com.google.bigtable.v2.Mutation;
+
 import com.google.common.collect.ImmutableList;
 import com.google.protobuf.ByteString;
 import org.apache.avro.Schema;

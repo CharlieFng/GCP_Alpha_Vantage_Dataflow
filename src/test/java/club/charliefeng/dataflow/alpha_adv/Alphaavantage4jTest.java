@@ -63,12 +63,14 @@ public class Alphaavantage4jTest {
 
         try {
 //            IntraDay response = stockTimeSeries.intraDay("MSFT", ONE_MIN, OutputSize.FULL);
-            org.patriques.output.timeseries.Daily response = stockTimeSeries.daily("MSFT", OutputSize.COMPACT);
+            org.patriques.output.timeseries.Daily response = stockTimeSeries.daily("AAPL", OutputSize.FULL);
             Map<String, String> metaData = response.getMetaData();
             System.out.println("Information: " + metaData.get("1. Information"));
             System.out.println("Stock: " + metaData.get("2. Symbol"));
+            System.out.println("Last refreshed: " + metaData.get("3. Last Refreshed"));
 
             List<StockData> stockData = response.getStockData();
+            System.out.println("Total number: " + stockData.size());
             stockData.forEach(stock -> {
                 System.out.println("date:   " + stock.getDateTime());
                 System.out.println("open:   " + stock.getOpen());

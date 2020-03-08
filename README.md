@@ -8,27 +8,21 @@ export GOOGLE_APPLICATION_CREDENTIALS=/Users/charlie/Downloads/credential.json
 mvn compile exec:java -Dexec.mainClass=club.charliefeng.dataflow.batch.DaillySubscriber4Stock \
 -Dexec.cleanupDaemonThreads=false \
 -Dexec.args=" \
---symbol=MSFT \
+--symbol=AMZN \
 --output=gs://alpha-vantage-landing-zone/stock \
 --runner=DirectRunner"
 
-##Staging Job
-mvn compile exec:java -Dexec.mainClass=club.charliefeng.dataflow.batch.DaillySubscriber4Stock \
--Dexec.cleanupDaemonThreads=false \
--Dexec.args=" \
---project=$PROJECT_ID \
---symbol=MSFT \
---output=gs://alpha-vantage-landing-zone/stock \
---stagingLocation=gs://alpha-vantage-dataflow-staging/staging \
---tempLocation=gs://alpha-vantage-dataflow-staging/temp \
---templateLocation=gs://alpha-vantage-dataflow-staging/templates/DaillySubscriber4Stock \
---runner=DataflowRunner"
-
-## Trigger Job
-gcloud dataflow jobs run stock-daily-subscriber \
---gcs-location=gs://alpha-vantage-dataflow-staging/templates/DaillySubscriber4Stock \
---region=asia-east1
-
+## Dataflow Runner
+java -cp target/alpha-vantage-dataflow-subscriber-bundled-1.0.jar \
+club.charliefeng.dataflow.batch.DaillySubscriber4Stock \
+  --runner=DataflowRunner \
+  --project=$PROJECT_ID \
+  --region=asia-east1 \
+  --tempLocation=gs://alpha-vantage-dataflow-staging/temp \
+  --stagingLocation=gs://alpha-vantage-dataflow-staging/staging/uber \
+  --symbol=MSFT \
+  --output=gs://alpha-vantage-landing-zone/stock 
+  
 
 
 
@@ -38,9 +32,8 @@ gcloud dataflow jobs run stock-daily-subscriber \
 mvn compile exec:java -Dexec.mainClass=club.charliefeng.dataflow.batch.DailyLoader4Stock \
 -Dexec.cleanupDaemonThreads=false \
 -Dexec.args=" \
---symbol=MSFT \
---input=gs://alpha-vantage-landing-zone/stock \
---output=gs://alpha-vantage-staging-zone/stock \
+--input=gs://alpha-vantage-landing-zone/stock/2020-03-06/MSFT-*.avro \
+--output=gs://alpha-vantage-staging-zone/stock/2020-03-06/MSFT \
 --runner=DirectRunner"
 
 ## Staging Job
@@ -48,9 +41,7 @@ mvn compile exec:java -Dexec.mainClass=club.charliefeng.dataflow.batch.DailyLoad
 -Dexec.cleanupDaemonThreads=false \
 -Dexec.args=" \
 --project=$PROJECT_ID \
---symbol=MSFT \
---input=gs://alpha-vantage-landing-zone/stock \
---output=gs://alpha-vantage-staging-zone/stock \
+--region=asia-east1 \
 --stagingLocation=gs://alpha-vantage-dataflow-staging/staging \
 --tempLocation=gs://alpha-vantage-dataflow-staging/temp \
 --templateLocation=gs://alpha-vantage-dataflow-staging/templates/DailyLoader4Stock \
@@ -58,9 +49,10 @@ mvn compile exec:java -Dexec.mainClass=club.charliefeng.dataflow.batch.DailyLoad
 
 ## Trigger Job
 gcloud dataflow jobs run stock-daily-loader \
+--region=asia-east1 \
 --gcs-location=gs://alpha-vantage-dataflow-staging/templates/DailyLoader4Stock \
---region=asia-east1
-
+--parameters=input=gs://alpha-vantage-landing-zone/stock/2020-03-06/MSFT-*.avro,\
+output=gs://alpha-vantage-staging-zone/stock/2020-03-06/MSFT
 
 
 
@@ -89,6 +81,18 @@ mvn compile exec:java -Dexec.mainClass=club.charliefeng.dataflow.batch.IntradayS
 gcloud dataflow jobs run stock-intraday-subscriber \
 --gcs-location=gs://alpha-vantage-dataflow-staging/templates/IntradaySubscriber4Stock \
 --region=asia-east1
+
+
+## Dataflow Runner
+java -cp target/alpha-vantage-dataflow-subscriber-bundled-1.0.jar \
+club.charliefeng.dataflow.batch.IntradaySubscriber4Stock \
+  --runner=DataflowRunner \
+  --project=$PROJECT_ID \
+  --region=asia-east1 \
+  --tempLocation=gs://alpha-vantage-dataflow-staging/temp \
+  --stagingLocation=gs://alpha-vantage-dataflow-staging/staging/uber \
+  --symbol=MSFT \
+  --outputTopic=projects/charlie-feng-contino/topics/stock-intraday 
 
 
 

@@ -76,7 +76,6 @@
             <manifest>
               <addClasspath>true</addClasspath>
               <classpathPrefix>lib/</classpathPrefix>
-<!--              <mainClass>com.example.dataflow.templates.WordCount</mainClass>-->
             </manifest>
           </archive>
         </configuration>
@@ -233,5 +232,11 @@
       <artifactId>beam-sdks-java-io-parquet</artifactId>
       <version>${beam.version}</version>
     </dependency>
+
+<!--    <dependency>-->
+<!--      <groupId>com.google.cloud.bigtable</groupId>-->
+<!--      <artifactId>bigtable-hbase-beam</artifactId>-->
+<!--      <version>1.11.0</version>-->
+<!--    </dependency>-->
   </dependencies>
 </project>

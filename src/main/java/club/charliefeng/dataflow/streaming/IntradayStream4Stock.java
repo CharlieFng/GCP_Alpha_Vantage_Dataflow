@@ -82,6 +82,8 @@ public class IntradayStream4Stock {
                 .withFormatFunction(TABLE_ROW_PARSER)
                 .withMethod(STREAMING_INSERTS);
 
+
+        // Need to creat column families [StockRecord, StockRecord-Metadata] ahead using cbt cli tool.
         BigtableIO.Write btWrite = BigtableIO.write()
                 .withProjectId(options.getProjectId())
                 .withInstanceId(options.getBtInstanceId())
