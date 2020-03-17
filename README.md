@@ -2,7 +2,6 @@ export PROJECT_ID=charlie-feng-contino
 export GOOGLE_APPLICATION_CREDENTIALS=/Users/charlie/Downloads/credential.json
 
 
-
 # New Stock daily archive batch collector
 ## Local DirectRunner
 mvn compile exec:java -Dexec.mainClass=club.charliefeng.dataflow.batch.DaillySubscriber4Stock \
@@ -63,25 +62,9 @@ mvn compile exec:java -Dexec.mainClass=club.charliefeng.dataflow.batch.IntradayS
 -Dexec.cleanupDaemonThreads=false \
 -Dexec.args=" \
 --symbol=MSFT \
+--interval=1min \
 --outputTopic=projects/charlie-feng-contino/topics/stock-intraday \
 --runner=DirectRunner"
-
-## Staging Job
-mvn compile exec:java -Dexec.mainClass=club.charliefeng.dataflow.batch.IntradaySubscriber4Stock \
--Dexec.cleanupDaemonThreads=false \
--Dexec.args=" \
---symbol=MSFT \
---outputTopic=projects/charlie-feng-contino/topics/stock-intraday \
---stagingLocation=gs://alpha-vantage-dataflow-staging/staging \
---tempLocation=gs://alpha-vantage-dataflow-staging/temp \
---templateLocation=gs://alpha-vantage-dataflow-staging/templates/IntradaySubscriber4Stock \
---runner=DataflowRunner"
-
-## Trigger Job
-gcloud dataflow jobs run stock-intraday-subscriber \
---gcs-location=gs://alpha-vantage-dataflow-staging/templates/IntradaySubscriber4Stock \
---region=asia-east1
-
 
 ## Dataflow Runner
 java -cp target/alpha-vantage-dataflow-subscriber-bundled-1.0.jar \
@@ -92,6 +75,7 @@ club.charliefeng.dataflow.batch.IntradaySubscriber4Stock \
   --tempLocation=gs://alpha-vantage-dataflow-staging/temp \
   --stagingLocation=gs://alpha-vantage-dataflow-staging/staging/uber \
   --symbol=MSFT \
+  --interval=1min \
   --outputTopic=projects/charlie-feng-contino/topics/stock-intraday 
 
 
@@ -106,6 +90,7 @@ mvn compile exec:java \
 -Dexec.cleanupDaemonThreads=false \
 -Dexec.args=" \
 --projectId=$PROJECT_ID \
+--stocks=MSFT,AAPL,AMZN,GOOGL \
 --windowSize=2 \
 --inputTopic=projects/charlie-feng-contino/topics/stock-intraday \
 --bqTableSpec=stock.intraday \
@@ -119,6 +104,7 @@ mvn compile exec:java \
 -Dexec.cleanupDaemonThreads=false \
 -Dexec.args=" \
 --projectId=$PROJECT_ID \
+--stocks=MSFT,AAPL,AMZN,GOOGL \
 --windowSize=2 \
 --inputTopic=projects/charlie-feng-contino/topics/stock-intraday \
 --bqTableSpec=stock.intraday \

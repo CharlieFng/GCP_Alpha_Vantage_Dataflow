@@ -18,8 +18,10 @@ import org.patriques.output.technicalindicators.MACD;
 import org.patriques.output.technicalindicators.data.MACDData;
 import org.patriques.output.timeseries.data.StockData;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import static org.patriques.input.timeseries.Interval.ONE_MIN;
 
@@ -41,15 +43,20 @@ public class Alphaavantage4jTest {
             System.out.println("Timezone: " + metaData.get("6. Time Zone"));
 
             List<StockData> stockData = response.getStockData();
-            stockData.forEach(stock -> {
-                System.out.println("date:   " + stock.getDateTime());
-                System.out.println("open:   " + stock.getOpen());
-                System.out.println("high:   " + stock.getHigh());
-                System.out.println("low:    " + stock.getLow());
-                System.out.println("close:  " + stock.getClose());
-                System.out.println("volume: " + stock.getVolume());
-            });
             System.out.println("Total number of records: " + stockData.size());
+
+            List<StockData> preDay = stockData.stream().filter(record ->
+                    record.getDateTime().toLocalDate().equals(LocalDate.of(2020,3,10))
+                    ).collect(Collectors.toList());
+            preDay.forEach(stock -> {
+//                System.out.println("date:   " + stock.getDateTime());
+//                System.out.println("open:   " + stock.getOpen());
+//                System.out.println("high:   " + stock.getHigh());
+//                System.out.println("low:    " + stock.getLow());
+//                System.out.println("close:  " + stock.getClose());
+//                System.out.println("volume: " + stock.getVolume());
+            });
+            System.out.println("Total number of records in one day: " + preDay.size());
         } catch (AlphaVantageException e) {
             System.out.println("something went wrong");
         }

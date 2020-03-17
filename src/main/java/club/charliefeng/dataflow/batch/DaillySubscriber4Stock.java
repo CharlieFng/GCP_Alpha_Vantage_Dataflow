@@ -31,7 +31,7 @@ public class DaillySubscriber4Stock {
     private static Logger LOG = LoggerFactory.getLogger(DaillySubscriber4Stock.class);
 
     public interface MyOptions extends PipelineOptions {
-        @Description("The symbol of stock")
+        @Description("The name of the equity of your choice.")
         @Validation.Required
         String getSymbol();
         void setSymbol(String value);
