@@ -147,10 +147,10 @@ public class IntradayStream4Stock {
 //        stockBundles.apply("Write to BigQuery", bqWrite);
 
 //        Execute the pipeline and wait until it finishes running. (for local testing)
-        pipeline.run().waitUntilFinish();
+//        pipeline.run().waitUntilFinish();
 
         //When staging job into gcs, need use this
-//        pipeline.run();
+        pipeline.run();
     }
 
     private static final SerializableFunction TABLE_ROW_PARSER =
