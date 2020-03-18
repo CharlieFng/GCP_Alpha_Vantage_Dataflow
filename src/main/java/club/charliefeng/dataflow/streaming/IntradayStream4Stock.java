@@ -35,8 +35,6 @@ import static org.apache.beam.sdk.io.gcp.bigquery.BigQueryIO.Write.Method.STREAM
 public class IntradayStream4Stock {
 
     private static Logger LOG = LoggerFactory.getLogger(IntradayStream4Stock.class);
-    private static String[] stockSymbols;
-    private static Map<String, TupleTag<StockRecord>> stockTags;
 
     public interface MyOptions extends PipelineOptions, StreamingOptions {
         @Description("GCP Project ID")
@@ -104,8 +102,8 @@ public class IntradayStream4Stock {
                 .withTableId(options.getBtTableId());
 
 
-        stockSymbols = options.getStocks().split(",");
-        stockTags = new HashMap<>(stockSymbols.length);
+        String[] stockSymbols = options.getStocks().split(",");
+        Map<String, TupleTag<StockRecord>> stockTags = new HashMap<>(stockSymbols.length);
         for (String symbol : stockSymbols) {
             stockTags.put(symbol, new TupleTag<StockRecord>(){});
         }
@@ -130,11 +128,26 @@ public class IntradayStream4Stock {
                 .apply("Write to BigTable", btWrite);
 
         PCollectionTuple brunchedRes = stockBundles.apply("Brunch into multiple collections",
-                ParDo.of(new BranchBySymbol()).withOutputTags(mainTag, rest));
+                    ParDo.of(new DoFn<StockRecord, StockRecord>() {
+                        @ProcessElement
+                        public void processElement(@Element StockRecord record, MultiOutputReceiver out) {
+                            String symbol = record.getMetadata().getSymbol();
+                            if(symbol.equals(stockSymbols[0])) {
+                                out.get(stockTags.get(stockSymbols[0])).output(record);
+                            }else {
+                                for (String stock : stockSymbols) {
+                                    if (symbol.equals(stock)) {
+                                        TupleTag<StockRecord> tag = stockTags.get(stock);
+                                        out.get(tag).output(record);
+                                    }
+                                }
+                            }
+                        }
+                    }).withOutputTags(mainTag,rest));
 
 
         for(Map.Entry<String, TupleTag<StockRecord>> item : stockTags.entrySet()) {
-            brunchedRes.get(item.getValue()).apply("Write to BigQuery",
+            brunchedRes.get(item.getValue()).apply(String.format("Write to BigQuery for %s", item.getKey()),
                         BigQueryIO.write()
                             .to(String.format("%s_%s",options.getBqTableSpec(),item.getKey()))
                             .withSchema(stockSchema)
@@ -188,20 +201,4 @@ public class IntradayStream4Stock {
         }
     }
 
-    static class BranchBySymbol extends DoFn<StockRecord, StockRecord> {
-        @ProcessElement
-        public void processElement(@Element StockRecord record, MultiOutputReceiver out) {
-            String symbol = record.getMetadata().getSymbol();
-            if(symbol.equals(stockSymbols[0])) {
-                out.get(stockTags.get(stockSymbols[0])).output(record);
-            }else {
-                for (String stock : stockSymbols) {
-                    if (symbol.equals(stock)) {
-                        TupleTag<StockRecord> tag = stockTags.get(stock);
-                        out.get(tag).output(record);
-                    }
-                }
-            }
-        }
-    }
 }
