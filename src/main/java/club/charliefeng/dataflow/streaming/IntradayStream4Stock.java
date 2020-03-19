@@ -89,7 +89,7 @@ public class IntradayStream4Stock {
         BigQueryIO.Write bqWrite = BigQueryIO.write()
                 .to(options.getBqTableSpec())
                 .withSchema(stockSchema)
-                .withCreateDisposition(BigQueryIO.Write.CreateDisposition.CREATE_IF_NEEDED)
+                .withCreateDisposition(BigQueryIO.Write.CreateDisposition.CREATE_NEVER)
                 .withWriteDisposition(BigQueryIO.Write.WriteDisposition.WRITE_APPEND)
                 .withFormatFunction(TABLE_ROW_PARSER)
                 .withMethod(STREAMING_INSERTS);
@@ -170,8 +170,10 @@ public class IntradayStream4Stock {
             new SerializableFunction<SpecificRecord, TableRow>() {
                 @Override
                 public TableRow apply(SpecificRecord specificRecord) {
-                    return BigQueryAvroUtils.convertSpecificRecordToTableRow(
+                    TableRow row = BigQueryAvroUtils.convertSpecificRecordToTableRow(
                             specificRecord, BigQueryAvroUtils.getTableSchema(specificRecord.getSchema()));
+                    return row;
+
                 }
             };
 

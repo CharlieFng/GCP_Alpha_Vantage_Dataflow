@@ -91,7 +91,7 @@ mvn compile exec:java \
 -Dexec.args=" \
 --projectId=$PROJECT_ID \
 --stocks=MSFT,AAPL,AMZN,GOOGL \
---windowSize=2 \
+--windowSize=5 \
 --inputTopic=projects/charlie-feng-contino/topics/stock-intraday \
 --bqTableSpec=stock.intraday \
 --btInstanceId=stock-intraday \
@@ -105,7 +105,7 @@ mvn compile exec:java \
 -Dexec.args=" \
 --projectId=$PROJECT_ID \
 --stocks=MSFT,AAPL,AMZN,GOOGL \
---windowSize=2 \
+--windowSize=5 \
 --inputTopic=projects/charlie-feng-contino/topics/stock-intraday \
 --bqTableSpec=stock.intraday \
 --btInstanceId=stock-intraday \
