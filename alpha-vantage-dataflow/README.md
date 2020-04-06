@@ -12,7 +12,7 @@ mvn compile exec:java -Dexec.mainClass=club.charliefeng.dataflow.batch.DaillySub
 --runner=DirectRunner"
 
 ## Dataflow Runner
-java -cp target/alpha-vantage-dataflow-subscriber-bundled-1.0.jar \
+java -cp target/alpha-vantage-dataflow-bundled-1.0.jar \
 club.charliefeng.dataflow.batch.DaillySubscriber4Stock \
   --runner=DataflowRunner \
   --project=$PROJECT_ID \
@@ -50,8 +50,8 @@ mvn compile exec:java -Dexec.mainClass=club.charliefeng.dataflow.batch.DailyLoad
 gcloud dataflow jobs run stock-daily-loader \
 --region=asia-east1 \
 --gcs-location=gs://alpha-vantage-dataflow-staging/templates/DailyLoader4Stock \
---parameters=input=gs://alpha-vantage-landing-zone/stock/2020-03-06/MSFT-*.avro,\
-output=gs://alpha-vantage-staging-zone/stock/2020-03-06/MSFT
+--parameters=input=gs://alpha-vantage-landing-zone/stock/2020-04-05/MSFT-*.avro,\
+output=gs://alpha-vantage-staging-zone/stock/2020-04-05/MSFT
 
 
 
@@ -67,7 +67,7 @@ mvn compile exec:java -Dexec.mainClass=club.charliefeng.dataflow.batch.IntradayS
 --runner=DirectRunner"
 
 ## Dataflow Runner
-java -cp target/alpha-vantage-dataflow-subscriber-bundled-1.0.jar \
+java -cp target/alpha-vantage-dataflow-bundled-1.0.jar \
 club.charliefeng.dataflow.batch.IntradaySubscriber4Stock \
   --runner=DataflowRunner \
   --project=$PROJECT_ID \
@@ -122,90 +122,3 @@ gcloud dataflow jobs run stock-intraday-stream-loader \
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-# Local DirectRunner
-mvn compile exec:java \
--Dexec.mainClass=club.charliefeng.dataflow.PubSubToBigQuery \
--Dexec.cleanupDaemonThreads=false \
--Dexec.args=" \
---project=$PROJECT_ID \
---inputTopic=projects/charlie-feng-contino/topics/stock-realtime \
---tableSpec=samples.alpha_stock \
---runner=DirectRunner \
---windowSize=2"
-
-
-# Dataflow Runner
-
-## Staging job
-mvn compile exec:java \
--Dexec.mainClass=club.charliefeng.dataflow.PubSubToBigQuery \
--Dexec.cleanupDaemonThreads=false \
--Dexec.args=" \
---project=$PROJECT_ID \
---inputTopic=projects/charlie-feng-contino/topics/stock-realtime \
---tableSpec=samples.alpha_stock \
---windowSize=2 \
---stagingLocation=gs://charlie-feng-contino-dataflow/staging \
---tempLocation=gs://charlie-feng-contino-dataflow/temp \
---templateLocation=gs://charlie-feng-contino-dataflow/template \
---runner=DataflowRunner"
-
-## Trigger job
-gcloud dataflow jobs run stock-streaming-demo \
---gcs-location=gs://charlie-feng-contino-dataflow/template \
---region=asia-east1 \
---parameters \
-"inputTopic=projects/charlie-feng-contino/topics/stock-realtime,\
-tableSpec=charlie-feng-contino:samples.alpha_stock,\
-windowSize=2"
