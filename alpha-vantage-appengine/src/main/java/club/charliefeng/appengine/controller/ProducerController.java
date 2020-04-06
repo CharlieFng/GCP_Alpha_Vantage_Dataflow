@@ -1,8 +1,10 @@
 package club.charliefeng.appengine.controller;
 
-import club.charliefeng.appengine.service.AlphaVantageService;
-import club.charliefeng.appengine.util.AvroCodec;
-import club.charliefeng.appengine.util.StockMapper;
+import club.charliefeng.appengine.config.AppConfig;
+import club.charliefeng.appengine.util.RestUtils;
+import club.charliefeng.common.mapper.StockMapper;
+import club.charliefeng.common.service.AlphaVantageService;
+import club.charliefeng.common.util.AvroCodec;
 import club.charliefeng.stock.StockRecord;
 import com.google.protobuf.ByteString;
 import com.google.pubsub.v1.PubsubMessage;
@@ -12,7 +14,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cloud.gcp.pubsub.core.PubSubTemplate;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -78,11 +79,10 @@ public class ProducerController {
                                             .putAllAttributes(attributes)
                                             .setData(ByteString.copyFrom(bytes))
                                             .build();
-            pubSubTemplate.publish("stock-intraday", pubsubMessage);
+            pubSubTemplate.publish(AppConfig.stockTopic, pubsubMessage);
         }
 
-        return new ResponseEntity<>(records.toString() ,HttpStatus.CREATED);
-
+        return RestUtils.CREATED(records.toString());
 
     }
 

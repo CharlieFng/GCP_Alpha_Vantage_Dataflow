@@ -1,4 +1,4 @@
-package club.charliefeng.dataflow.dto;
+package club.charliefeng.common.dto;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
@@ -9,7 +9,7 @@ import java.time.LocalDateTime;
 import java.util.Map;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class StockRecord implements Serializable {
+public class StockData implements Serializable {
 
     private Map<String,String> metadata;
 
@@ -21,13 +21,13 @@ public class StockRecord implements Serializable {
     private long volume;
 
     @JsonCreator
-    public StockRecord(@JsonProperty("metadata") Map<String,String> metadata,
-                       @JsonProperty("dateTime") LocalDateTime dateTime,
-                       @JsonProperty("open") double open,
-                       @JsonProperty("high") double high,
-                       @JsonProperty("low") double low,
-                       @JsonProperty("close") double close,
-                       @JsonProperty("volume") long volume) {
+    public StockData(@JsonProperty("metadata") Map<String,String> metadata,
+                     @JsonProperty("dateTime") LocalDateTime dateTime,
+                     @JsonProperty("open") double open,
+                     @JsonProperty("high") double high,
+                     @JsonProperty("low") double low,
+                     @JsonProperty("close") double close,
+                     @JsonProperty("volume") long volume) {
         this.metadata = metadata;
         this.dateTime = dateTime;
         this.open = open;
