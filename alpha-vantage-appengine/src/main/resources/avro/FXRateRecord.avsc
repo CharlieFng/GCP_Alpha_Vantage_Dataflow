@@ -1,0 +1,28 @@
+{
+  "namespace": "club.charliefeng.rate",
+  "type": "record",
+  "name": "FXRateRecord",
+  "version": "1",
+  "fields": [
+    {   "name": "metadata",
+        "type": {
+            "name": "Metadata",
+            "type": "record",
+            "fields": [
+                {"name": "information", "type": "string"},
+                {"name": "fromSymbol", "type": "string"},
+                {"name": "toSymbol", "type": "string"},
+                {"name": "lastRefreshed", "type": "string"},
+                {"name": "interval", "type": ["null", "string"], "default": null},
+                {"name": "outputSize", "type": "string"},
+                {"name": "timeZone", "type": "string"}
+            ]
+        }
+    },
+    {"name": "timestamp", "type": "string"},
+    {"name": "open", "type": "double"},
+    {"name": "high", "type": "double"},
+    {"name": "low", "type": "double"},
+    {"name": "close", "type": "double"}
+  ]
+}

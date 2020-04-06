@@ -1,0 +1,6 @@
+#spring:
+#  cloud:
+#    gcp:
+#      project-id: charlie-feng-contino
+#      credentials:
+#        location: file:/Users/charlie/Downloads/credential.json
