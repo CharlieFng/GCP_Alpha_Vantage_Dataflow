@@ -1,4 +1,4 @@
-package club.charliefeng.dataflow.util;
+package club.charliefeng.common.mapper;
 
 import club.charliefeng.stock.Metadata;
 

@@ -1,6 +1,6 @@
 package club.charliefeng.dataflow.streaming;
 
-import club.charliefeng.dataflow.util.AvroCodec;
+import club.charliefeng.common.util.AvroCodec;
 import club.charliefeng.dataflow.util.BigQueryAvroUtils;
 import club.charliefeng.dataflow.util.BigTableAvroUtils;
 import club.charliefeng.stock.StockRecord;
@@ -95,7 +95,7 @@ public class IntradayStream4Stock {
                 .withMethod(STREAMING_INSERTS);
 
 
-        // Need to creat column families [StockRecord, StockRecord-Metadata] ahead using cbt cli tool.
+        // Need to creat column families [Stock, Stock-Metadata] ahead using cbt cli tool.
         BigtableIO.Write btWrite = BigtableIO.write()
                 .withProjectId(options.getProjectId())
                 .withInstanceId(options.getBtInstanceId())
@@ -117,7 +117,7 @@ public class IntradayStream4Stock {
         }
 
         PCollection<StockRecord> stockBundles = pipeline
-//                .apply("Read PubSub Messages", PubsubIO.readAvros(StockRecord.class).fromTopic(options.getInputTopic()))
+//                .apply("Read PubSub Messages", PubsubIO.readAvros(Stock.class).fromTopic(options.getInputTopic()))
                 .apply("Read Pubsub Messages", PubsubIO.readMessagesWithAttributesAndMessageId()
                                                              .fromTopic(options.getInputTopic())
                                                              .withIdAttribute("uniqueId"))

@@ -9,7 +9,7 @@ import java.time.LocalDateTime;
 import java.util.Map;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class StockData implements Serializable {
+public class Stock implements Serializable {
 
     private Map<String,String> metadata;
 
@@ -21,13 +21,13 @@ public class StockData implements Serializable {
     private long volume;
 
     @JsonCreator
-    public StockData(@JsonProperty("metadata") Map<String,String> metadata,
-                     @JsonProperty("dateTime") LocalDateTime dateTime,
-                     @JsonProperty("open") double open,
-                     @JsonProperty("high") double high,
-                     @JsonProperty("low") double low,
-                     @JsonProperty("close") double close,
-                     @JsonProperty("volume") long volume) {
+    public Stock(@JsonProperty("metadata") Map<String,String> metadata,
+                 @JsonProperty("dateTime") LocalDateTime dateTime,
+                 @JsonProperty("open") double open,
+                 @JsonProperty("high") double high,
+                 @JsonProperty("low") double low,
+                 @JsonProperty("close") double close,
+                 @JsonProperty("volume") long volume) {
         this.metadata = metadata;
         this.dateTime = dateTime;
         this.open = open;

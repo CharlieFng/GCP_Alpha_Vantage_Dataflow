@@ -1,18 +1,16 @@
 package club.charliefeng.dataflow.batch;
 
-import club.charliefeng.dataflow.dto.StockRecord;
-import club.charliefeng.dataflow.util.StockMapper;
+import club.charliefeng.common.dto.Stock;
+import club.charliefeng.common.mapper.StockMapper;
+import club.charliefeng.common.service.AlphaVantageService;
 import club.charliefeng.dataflow.util.StockRecordCoder;
+import club.charliefeng.stock.StockRecord;
 import org.apache.beam.sdk.Pipeline;
 import org.apache.beam.sdk.io.AvroIO;
 import org.apache.beam.sdk.options.*;
 import org.apache.beam.sdk.transforms.Create;
 import org.apache.beam.sdk.transforms.DoFn;
 import org.apache.beam.sdk.transforms.ParDo;
-import org.patriques.AlphaVantageConnector;
-import org.patriques.TimeSeries;
-import org.patriques.input.timeseries.OutputSize;
-import org.patriques.output.AlphaVantageException;
 import org.patriques.output.timeseries.Daily;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -43,22 +41,6 @@ public class DaillySubscriber4Stock {
 
     }
 
-    private static Daily fetchDailyStock(String symbol) {
-        int timeout = 30000;
-        AlphaVantageConnector apiConnector = new AlphaVantageConnector(apiKey, timeout);
-        TimeSeries stockTimeSeries = new TimeSeries(apiConnector);
-        Daily response = null;
-
-        while(response==null){
-            try {
-                response = stockTimeSeries.daily(symbol, OutputSize.FULL);
-            } catch (AlphaVantageException e) {
-                LOG.error("Fetch daily stock records failed due to {}, will retry", e.getMessage());
-            }
-        }
-        return response;
-    }
-
     public static void main(String[] args) {
 
         ZonedDateTime zonedDateTime = ZonedDateTime.now(ZoneId.of("US/Eastern"));
@@ -77,16 +59,16 @@ public class DaillySubscriber4Stock {
 
         Pipeline pipeline = Pipeline.create(options);
 
-        Daily daily = fetchDailyStock(options.getSymbol());
+        Daily daily = AlphaVantageService.fetchDailyStock(options.getSymbol());
         Map<String, String> metadata = daily.getMetaData();
-        List<StockRecord> records = daily.getStockData().stream()
+        List<Stock> records = daily.getStockData().stream()
                                     .map(data -> StockMapper.map(data, metadata)).collect(Collectors.toList());
 
 
         pipeline
                 .apply("Fetch Stock Records", Create.of(records)).setCoder(new StockRecordCoder())
                 .apply("Map Pojo to Avro", ParDo.of(new PojoToAvroFn()))
-                .apply(AvroIO.write(club.charliefeng.stock.StockRecord.class)
+                .apply(AvroIO.write(StockRecord.class)
                         .to(String.format("%s/%s/%s-",
                                 options.getOutput(),
                                 formatLocalDate,
@@ -103,10 +85,10 @@ public class DaillySubscriber4Stock {
 //        pipeline.run();
     }
 
-    static class PojoToAvroFn extends DoFn<StockRecord, club.charliefeng.stock.StockRecord> {
+    static class PojoToAvroFn extends DoFn<Stock, StockRecord> {
         @ProcessElement
-        public void processElement(@Element StockRecord pojo, OutputReceiver<club.charliefeng.stock.StockRecord> out) {
-            club.charliefeng.stock.StockRecord avroRecord = StockMapper.mapDaily(pojo);
+        public void processElement(@Element Stock pojo, OutputReceiver<StockRecord> out) {
+            StockRecord avroRecord = StockMapper.mapDaily(pojo);
             LOG.info("Processed avro record: {}", avroRecord);
             out.output(avroRecord);
         }

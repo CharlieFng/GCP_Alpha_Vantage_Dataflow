@@ -28,7 +28,6 @@
         <maven-jar-plugin.version>3.1.2</maven-jar-plugin.version>
         <maven-shade-plugin.version>3.2.1</maven-shade-plugin.version>
         <slf4j.version>1.7.28</slf4j.version>
-        <avro.version>1.9.1</avro.version>
     </properties>
 
     <repositories>
@@ -42,10 +41,6 @@
             <snapshots>
                 <enabled>true</enabled>
             </snapshots>
-        </repository>
-        <repository>
-            <id>alphavantage4j</id>
-            <url>https://dl.bintray.com/patriques82/maven</url>
         </repository>
     </repositories>
 
@@ -105,29 +100,6 @@
                     </execution>
                 </executions>
             </plugin>
-
-            <plugin>
-                <groupId>org.apache.avro</groupId>
-                <artifactId>avro-maven-plugin</artifactId>
-                <version>${avro.version}</version>
-                <executions>
-                    <execution>
-                        <phase>generate-sources</phase>
-                        <goals>
-                            <goal>schema</goal>
-                            <goal>protocol</goal>
-                            <goal>idl-protocol</goal>
-                        </goals>
-                        <configuration>
-                            <sourceDirectory>src/main/resources/avro/</sourceDirectory>
-                            <outputDirectory>${project.build.directory}/generated-sources/avro/</outputDirectory>
-                        </configuration>
-                    </execution>
-                </executions>
-                <configuration>
-                    <stringType>String</stringType>
-                </configuration>
-            </plugin>
         </plugins>
 
         <pluginManagement>
@@ -145,17 +117,10 @@
     </build>
 
     <dependencies>
-
         <dependency>
-            <groupId>org.patriques</groupId>
-            <artifactId>alphavantage4j</artifactId>
-            <version>1.4</version>
-        </dependency>
-
-        <dependency>
-            <groupId>org.apache.avro</groupId>
-            <artifactId>avro</artifactId>
-            <version>${avro.version}</version>
+            <groupId>charliefeng.club</groupId>
+            <artifactId>alpha-vantage-common</artifactId>
+            <version>1.0</version>
         </dependency>
 
         <dependency>

@@ -1,11 +1,11 @@
 spring:
   jackson:
     property-naming-strategy: SNAKE_CASE
-  cloud:
-    gcp:
-      project-id: charlie-feng-contino
-      credentials:
-        location: file:/Users/charlie/Downloads/credential.json
+#  cloud:
+#    gcp:
+#      project-id: charlie-feng-contino
+#      credentials:
+#        location: file:/Users/charlie/Downloads/credential.json
 
 
 app:

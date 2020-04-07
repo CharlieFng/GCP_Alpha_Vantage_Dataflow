@@ -15,10 +15,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cloud.gcp.pubsub.core.PubSubTemplate;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -44,9 +41,9 @@ public class ProducerController {
         this.pubSubTemplate = pubSubTemplate;
     }
 
-    @PostMapping(path="/stock/intraday", produces = APPLICATION_JSON_VALUE)
-    public ResponseEntity<String> fetchIntradayStock(@RequestParam("symbol") String symbol,
-                                                     @RequestParam("interval") String interval) {
+    @GetMapping(path="/stock/{symbol}/intraday/{interval}", produces = APPLICATION_JSON_VALUE)
+    public ResponseEntity<String> fetchIntradayStock(@PathVariable("symbol") String symbol,
+                                                     @PathVariable("interval") String interval) {
 
         IntraDay intraday = AlphaVantageService.fetchIntrayStock(symbol, interval);
         Map<String, String> metadata = intraday.getMetaData();

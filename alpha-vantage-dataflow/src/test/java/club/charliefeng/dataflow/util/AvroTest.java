@@ -1,5 +1,6 @@
 package club.charliefeng.dataflow.util;
 
+import club.charliefeng.common.util.AvroCodec;
 import club.charliefeng.stock.Metadata;
 import club.charliefeng.stock.StockRecord;
 import org.apache.avro.generic.GenericRecord;

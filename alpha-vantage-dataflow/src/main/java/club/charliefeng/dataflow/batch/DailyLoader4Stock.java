@@ -62,24 +62,12 @@ public class DailyLoader4Stock {
         System.out.println("Avro schema is: " + schema);
         pipeline
                 .apply("Read Avro from GCS",
-                        AvroIO.readGenericRecords(schema).from(
-//                            String.format("%s/%s/%s-*.avro",
-//                                options.getInput(),
-//                                formatLocalDate,
-//                                options.getSymbol())
-                                options.getInput()
-                            )
-                        )
+                        AvroIO.readGenericRecords(schema).from(options.getInput()))
                 .apply("Write Parquet to GCS",
                         FileIO.<GenericRecord>write()
                             .via(ParquetIO.sink(schema)
                                 .withCompressionCodec(CompressionCodecName.SNAPPY))
-                            .to(
-//                                String.format("%s/%s/parquet/",
-//                                    options.getOutput(),
-//                                    formatLocalDate)
-                                options.getOutput()
-                            )
+                            .to(options.getOutput())
                             .withSuffix(".parquet")
                        );
 

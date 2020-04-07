@@ -1,6 +1,6 @@
 package club.charliefeng.dataflow.util;
 
-import club.charliefeng.dataflow.dto.StockRecord;
+import club.charliefeng.common.dto.Stock;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import org.apache.beam.sdk.coders.Coder;
@@ -12,20 +12,20 @@ import java.io.OutputStream;
 import java.util.Collections;
 import java.util.List;
 
-public class StockRecordCoder extends Coder<StockRecord> {
+public class StockRecordCoder extends Coder<Stock> {
 
     private static final ObjectMapper objectMapper = new ObjectMapper().registerModule(new JavaTimeModule());
 
     @Override
-    public void encode(StockRecord data, OutputStream outStream) throws IOException {
+    public void encode(Stock data, OutputStream outStream) throws IOException {
         String serializedStock = objectMapper.writeValueAsString(data);
         outStream.write(serializedStock.getBytes());
     }
 
     @Override
-    public StockRecord decode(InputStream inStream) throws IOException {
+    public Stock decode(InputStream inStream) throws IOException {
         String serializedStock = new String(StreamUtils.getBytesWithoutClosing(inStream));
-        StockRecord data = objectMapper.readValue(serializedStock, StockRecord.class);
+        Stock data = objectMapper.readValue(serializedStock, Stock.class);
         return data;
     }
 

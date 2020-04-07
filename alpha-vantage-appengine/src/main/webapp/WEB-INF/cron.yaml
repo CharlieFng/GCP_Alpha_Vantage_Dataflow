@@ -1,0 +1,21 @@
+cron:
+  - description: "Intraday stock collect for Microsoft"
+    url: /publish/stock/MSFT/intraday/1min
+    schedule: every 30 minutes from 09:00 to 16:30
+    timezone: America/New_York
+    target: alpha-vantage-publisher
+  - description: "Intraday stock collect for Amazon"
+    url: /publish/stock/AMZN/intraday/1min
+    schedule: every 30 minutes from 09:00 to 16:30
+    timezone: America/New_York
+    target: alpha-vantage-publisher
+  - description: "Intraday stock collect for Google"
+    url: /publish/stock/GOOGL/intraday/1min
+    schedule: every 30 minutes from 09:00 to 16:30
+    timezone: America/New_York
+    target: alpha-vantage-publisher
+  - description: "Intraday stock collect for Apple"
+    url: /publish/stock/AAPL/intraday/1min
+    schedule: every 30 minutes from 09:00 to 16:30
+    timezone: America/New_York
+    target: alpha-vantage-publisher

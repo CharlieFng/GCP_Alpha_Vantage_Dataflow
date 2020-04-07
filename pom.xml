@@ -27,5 +27,6 @@
   <modules>
     <module>alpha-vantage-dataflow</module>
     <module>alpha-vantage-appengine</module>
+      <module>alpha-vantage-common</module>
   </modules>
 </project>

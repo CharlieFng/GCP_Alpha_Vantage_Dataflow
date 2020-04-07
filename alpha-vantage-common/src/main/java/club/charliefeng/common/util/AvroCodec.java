@@ -1,4 +1,4 @@
-package club.charliefeng.dataflow.util;
+package club.charliefeng.common.util;
 
 import org.apache.avro.Schema;
 import org.apache.avro.generic.GenericDatumReader;

@@ -1,14 +1,17 @@
-package club.charliefeng.dataflow.util;
+package club.charliefeng.common.mapper;
 
-import club.charliefeng.dataflow.dto.StockData;
+
+import club.charliefeng.common.dto.Stock;
 import club.charliefeng.stock.Metadata;
+import club.charliefeng.stock.StockRecord;
+import org.patriques.output.timeseries.data.StockData;
 
 import java.util.Map;
 
 public class StockMapper {
 
-    public static StockData map(org.patriques.output.timeseries.data.StockData data, Map<String,String> metadata) {
-        return new StockData(
+    public static Stock map(StockData data, Map<String,String> metadata) {
+        return new Stock(
                 metadata,
                 data.getDateTime(),
                 data.getOpen(),
@@ -18,10 +21,10 @@ public class StockMapper {
                 data.getVolume());
     }
 
-    public static club.charliefeng.stock.StockRecord mapDaily(StockData pojo) {
+    public static StockRecord mapDaily(Stock pojo) {
         Map<String,String> pojoMeta = pojo.getMetadata();
         Metadata avroMeta = StockMetadataMapper.mapDaily(pojoMeta);
-        return new club.charliefeng.stock.StockRecord(
+        return new StockRecord(
                 avroMeta,
                 pojo.getDateTime().toString(),
                 pojo.getOpen(),
@@ -31,10 +34,10 @@ public class StockMapper {
                 pojo.getVolume());
     }
 
-    public static club.charliefeng.stock.StockRecord mapIntraday(StockData pojo) {
+    public static StockRecord mapIntraday(Stock pojo) {
         Map<String,String> pojoMeta = pojo.getMetadata();
         Metadata avroMeta = StockMetadataMapper.mapIntraday(pojoMeta);
-        return new club.charliefeng.stock.StockRecord(
+        return new StockRecord(
                 avroMeta,
                 pojo.getDateTime().toString(),
                 pojo.getOpen(),
