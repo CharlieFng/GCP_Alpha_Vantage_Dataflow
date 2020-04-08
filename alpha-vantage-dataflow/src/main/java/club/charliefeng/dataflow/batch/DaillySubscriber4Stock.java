@@ -25,7 +25,6 @@ import java.util.stream.Collectors;
 
 public class DaillySubscriber4Stock {
 
-    private static final String apiKey = "4VLYMUYXJE1BF1UU";
     private static Logger LOG = LoggerFactory.getLogger(DaillySubscriber4Stock.class);
 
     public interface MyOptions extends PipelineOptions {

@@ -29,7 +29,6 @@ import java.util.stream.Collectors;
 
 public class IntradaySubscriber4Stock {
 
-    private static final String apiKey = "4VLYMUYXJE1BF1UU";
     private static Logger LOG = LoggerFactory.getLogger(IntradaySubscriber4Stock.class);
 
     public interface MyOptions extends PipelineOptions {
@@ -105,9 +104,9 @@ public class IntradaySubscriber4Stock {
 
             LocalDateTime recordTime = in.getDateTime();
             // Get data in the window of 4o mins, job get triggered every 30 mins
-            if(recordTime.compareTo(localTime.minusMinutes(40))>0 && recordTime.compareTo(localTime) <=0) {
+//            if(recordTime.compareTo(localTime.minusMinutes(40))>0 && recordTime.compareTo(localTime) <=0) {
             // For development and testing, set date compare == 0, only filter current day data
-//            if(recordTime.toLocalDate().compareTo(localDate)<=0) {
+            if(recordTime.toLocalDate().compareTo(localDate)<=0) {
                 out.output(in);
                 LOG.info("Current US/Eastern local time is: {}, record date time is{}", localTime, recordTime);
                 LOG.info("Record in local date {} has been added", localDate);

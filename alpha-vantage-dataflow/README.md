@@ -31,8 +31,8 @@ club.charliefeng.dataflow.batch.DaillySubscriber4Stock \
 mvn compile exec:java -Dexec.mainClass=club.charliefeng.dataflow.batch.DailyLoader4Stock \
 -Dexec.cleanupDaemonThreads=false \
 -Dexec.args=" \
---input=gs://alpha-vantage-landing-zone/stock/2020-03-06/MSFT-*.avro \
---output=gs://alpha-vantage-staging-zone/stock/2020-03-06/MSFT \
+--input=gs://alpha-vantage-landing-zone/stock/2020-04-08/MSFT-*.avro \
+--output=gs://alpha-vantage-staging-zone/stock/2020-04-08/MSFT \
 --runner=DirectRunner"
 
 ## Staging Job
@@ -50,8 +50,8 @@ mvn compile exec:java -Dexec.mainClass=club.charliefeng.dataflow.batch.DailyLoad
 gcloud dataflow jobs run stock-daily-loader \
 --region=asia-east1 \
 --gcs-location=gs://alpha-vantage-dataflow-staging/templates/DailyLoader4Stock \
---parameters=input=gs://alpha-vantage-landing-zone/stock/2020-04-05/MSFT-*.avro,\
-output=gs://alpha-vantage-staging-zone/stock/2020-04-05/MSFT
+--parameters=input=gs://alpha-vantage-landing-zone/stock/2020-04-08/AMZN-*.avro,\
+output=gs://alpha-vantage-staging-zone/stock/2020-04-08/AMZN
 
 
 
