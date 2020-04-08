@@ -1,0 +1,6 @@
+name: google-cloud-composer
+dependencies:
+- python=3.7.1
+- pip
+- pip:
+    - -r file:requirements.txt

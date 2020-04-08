@@ -1,0 +1,5 @@
+google-api-python-client==1.7.11
+apache-airflow[gcp_api]==1.10.6
+oauth2client==4.1.3
+# # apache-beam==2.15.0
+# # pandas==0.25.3
