@@ -20,8 +20,6 @@ public class AlphaVantageService {
     private static final AlphaVantageConnector apiConnector = new AlphaVantageConnector(apiKey, 30000);
 
     public static IntraDay fetchIntrayStock(String symbol, String value) {
-        int timeout = 30000;
-        AlphaVantageConnector apiConnector = new AlphaVantageConnector(apiKey, timeout);
         TimeSeries stockTimeSeries = new TimeSeries(apiConnector);
         IntraDay response = null;
         Interval interval;
